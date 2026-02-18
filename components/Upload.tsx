@@ -93,7 +93,7 @@ export const Upload = ({ onComplete }: UploadProps) => {
 		if (!isSignedIn) return
 		const droppedFile = e.dataTransfer.files[0]
 
-		const allowedTypes = ['image/jpeg', 'image/png']
+		const allowedTypes = ['image/jpeg', 'image/png', 'image/webp']
 		if (!allowedTypes.includes(droppedFile.type)) return
 
 		if (droppedFile.size > MAX_FILE_SIZE) return
@@ -125,7 +125,7 @@ export const Upload = ({ onComplete }: UploadProps) => {
 						ref={inputRef}
 						type="file"
 						className="drop-input"
-						accept=".jpg,.jpeg,.png"
+						accept=".jpg,.jpeg,.png,.webp"
 						disabled={!isSignedIn}
 						onChange={onChange}
 					/>
