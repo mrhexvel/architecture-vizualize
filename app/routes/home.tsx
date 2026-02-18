@@ -1,6 +1,6 @@
 import { Navbar } from 'components/Navbar'
 import { Button } from 'components/ui/Button'
-import { ArrowRight, Layers } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, Clock, Layers } from 'lucide-react'
 import type { Route } from './+types/home'
 
 export function meta({}: Route.MetaArgs) {
@@ -57,6 +57,47 @@ export default function Home() {
 							<p>Supports JPG, PNG, formats up to 10MB</p>
 						</div>
 						<p>Upload images</p>
+					</div>
+				</div>
+			</section>
+
+			<section className="projects">
+				<div className="section-inner">
+					<div className="section-head">
+						<div className="copy">
+							<h2>Projects</h2>
+							<p>
+								Your latest work and shared community projects, all in one
+								place.
+							</p>
+						</div>
+					</div>
+					<div className="projects-grid">
+						<div className="project-card group">
+							<div className="preview">
+								<img
+									src="https://www.sklad-kirpicha.ru/upload/iblock/4ce/ooxncib1na2v8qsj752xwxhzphnoriwu.png"
+									alt="Project"
+								/>
+
+								<div className="badge">
+									<span>Community</span>
+								</div>
+							</div>
+							<div className="card-body">
+								<div>
+									<h3>Proeject Manhattan</h3>
+									<div className="meta">
+										<Clock size={12} />
+										<span>{new Date('01.01.2026').toLocaleDateString()}</span>
+										<span>By HEXVEL</span>
+									</div>
+								</div>
+								<div className="arrow">
+									<ArrowUpRight size={18} />
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</section>
