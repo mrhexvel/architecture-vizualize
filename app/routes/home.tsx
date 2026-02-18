@@ -1,7 +1,9 @@
 import { Navbar } from 'components/Navbar'
 import { Button } from 'components/ui/Button'
 import { Upload } from 'components/Upload'
+import { createProject } from 'lib/puter.action'
 import { ArrowRight, ArrowUpRight, Clock, Layers } from 'lucide-react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import type { Route } from './+types/home'
 
@@ -14,10 +16,39 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Home() {
 	const navigate = useNavigate()
+	const [projects, setProjects] = useState<DesignItem[]>([])
 
-	const handleUploadComplete = (base64: string) => {
+	const handleUploadComplete = async (base64: string) => {
 		const newId = Date.now().toString()
-		navigate(`/vizualizer/${newId}`)
+		const name = `Residence ${newId}`
+
+		const newProject: DesignItem = {
+			id: newId,
+			name,
+			sourceImage: base64,
+			renderedImage: undefined,
+			timestamp: Date.now()
+		}
+
+		const saved = await createProject({
+			item: newProject,
+			visibility: 'private'
+		})
+
+		if (!saved) {
+			console.error('Failed to create project')
+			return false
+		}
+
+		setProjects(prev => [newProject, ...prev])
+
+		navigate(`/vizualizer/${saved.id}`, {
+			state: {
+				initialImage: saved.sourceImage,
+				initialRendered: saved.renderedImage || null,
+				name
+			}
+		})
 
 		return true
 	}
@@ -84,31 +115,35 @@ export default function Home() {
 						</div>
 					</div>
 					<div className="projects-grid">
-						<div className="project-card group">
-							<div className="preview">
-								<img
-									src="https://www.sklad-kirpicha.ru/upload/iblock/4ce/ooxncib1na2v8qsj752xwxhzphnoriwu.png"
-									alt="Project"
-								/>
+						{projects.map(
+							({ id, name, renderedImage, sourceImage, timestamp }) => (
+								<div className="project-card group">
+									<div className="preview">
+										<img
+											src={renderedImage || sourceImage}
+											alt="Project"
+										/>
 
-								<div className="badge">
-									<span>Community</span>
-								</div>
-							</div>
-							<div className="card-body">
-								<div>
-									<h3>Proeject Manhattan</h3>
-									<div className="meta">
-										<Clock size={12} />
-										<span>{new Date('01.01.2026').toLocaleDateString()}</span>
-										<span>By HEXVEL</span>
+										<div className="badge">
+											<span>Community</span>
+										</div>
+									</div>
+									<div className="card-body">
+										<div>
+											<h3>{name}</h3>
+											<div className="meta">
+												<Clock size={12} />
+												<span>{new Date(timestamp).toLocaleDateString()}</span>
+												<span>By HEXVEL</span>
+											</div>
+										</div>
+										<div className="arrow">
+											<ArrowUpRight size={18} />
+										</div>
 									</div>
 								</div>
-								<div className="arrow">
-									<ArrowUpRight size={18} />
-								</div>
-							</div>
-						</div>
+							)
+						)}
 					</div>
 				</div>
 			</section>
