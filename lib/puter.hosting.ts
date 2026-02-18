@@ -21,7 +21,11 @@ export const getOrCreateHostingConfig =
 
 		try {
 			const created = await puter.hosting.create(newSubdomain, '.')
-			return { subdomain: created.subdomain }
+			const record = { subdomain: created.subdomain }
+
+			await puter.kv.set(HOSTING_CONFIG_KEY, record)
+
+			return record
 		} catch (e) {
 			console.warn(`Failed to create hosting config: ${e}`)
 			return null
